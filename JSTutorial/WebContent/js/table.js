@@ -13,7 +13,6 @@ function createTable(message){
 			cell.appendChild(document.createTextNode("test"));
 			row.appendChild(cell);
 		}
-		var oTable = document.getElementById("newbody");
 		document.getElementById("newbody").appendChild(row);
 	}
 	
