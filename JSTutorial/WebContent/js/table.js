@@ -13,7 +13,7 @@ function createTable(message){
 			cell.appendChild(document.createTextNode("test"));
 			row.appendChild(cell);
 		}
-		document.getElementById("newbody").appendChild(row);
+		document.getElementById("newbody").appendChild(row); //
 	}
 	
 }
