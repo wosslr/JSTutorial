@@ -2,18 +2,95 @@
  * 
  */
 
+var salesOrders = [
+      {
+    	  ID: "1527",
+    	  customer: "101",
+    	  date: "2015-06-10",
+    	  status: "Released",
+    	  items: [
+    	          {
+    	        	  itemID: "10",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 100,
+    	        	  unit: "EA"
+    	          },
+    	          {
+    	        	  itemID: "20",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 150,
+    	        	  unit: "EA"
+    	          }
+    	  ]
+      },
+      {
+    	  ID: "1528",
+    	  customer: "101",
+    	  date: "2015-06-11",
+    	  status: "In Process",
+    	  items: [
+    	          {
+    	        	  itemID: "10",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 20,
+    	        	  unit: "EA"
+    	          },
+    	          {
+    	        	  itemID: "20",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 50,
+    	        	  unit: "EA"
+    	          }
+    	  ]
+      },
+      {
+    	  ID: "1529",
+    	  customer: "102",
+    	  date: "2015-06-12",
+    	  status: "New",
+    	  items: [
+    	          {
+    	        	  itemID: "10",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 23,
+    	        	  unit: "EA"
+    	          },
+    	          {
+    	        	  itemID: "20",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 45,
+    	        	  unit: "EA"
+    	          }
+    	  ]
+      },
+];
+
 function createTable(message){
 	
-	for(var i=0; i<10;i++){
+	var hRow = document.createElement("tr");
+	hRow.style.width = "80%";
+	appendCell(hRow, "th", "Order ID");
+	appendCell(hRow, "th", "Customer");
+	appendCell(hRow, "th", "Status");
+	appendCell(hRow, "th", "Date");
+	document.getElementById("newtitle").appendChild(hRow);
+	
+	for(var i=0; i<salesOrders.length;i++){
 		
 		var row = document.createElement("tr");
+		appendCell(row, "td", salesOrders[i].ID);
+		appendCell(row, "td", salesOrders[i].customer);
+		appendCell(row, "td", salesOrders[i].status);
 		
-		for(var j = 0; j < 10; j++){
-			var cell = document.createElement("td");
-			cell.appendChild(document.createTextNode("test"));
-			row.appendChild(cell);
-		}
+		var date = new Date(salesOrders[i].date);
+		appendCell(row, "td", date.toDateString());
 		document.getElementById("newbody").appendChild(row); //
 	}
 	
+}
+
+function appendCell(oRow, cellTag, text) {
+	var oCell = document.createElement(cellTag);
+	oCell.appendChild(document.createTextNode(text));
+	oRow.appendChild(oCell);
 }
