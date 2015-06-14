@@ -65,10 +65,14 @@ var salesOrders = [
       },
 ];
 
+
+var gSelectedRow;
+
 function createTable(message){
 	
 	var hRow = document.createElement("tr");
-	hRow.style.width = "80%";
+	hRow.style.width = "200%";
+	
 	appendCell(hRow, "th", "Order ID");
 	appendCell(hRow, "th", "Customer");
 	appendCell(hRow, "th", "Status");
@@ -78,6 +82,21 @@ function createTable(message){
 	for(var i=0; i<salesOrders.length;i++){
 		
 		var row = document.createElement("tr");
+		row.onclick = function (){
+			
+			if (gSelectedRow === this) {
+				gSelectedRow = null;
+				this.className = "";
+			} else if (gSelectedRow == null) {
+				gSelectedRow = this;
+				this.className = "selectedRow";
+			} else {
+				gSelectedRow.className = "";
+				gSelectedRow = this;
+				gSelectedRow.className = "selectedRow";
+			}
+		};
+		
 		appendCell(row, "td", salesOrders[i].ID);
 		appendCell(row, "td", salesOrders[i].customer);
 		appendCell(row, "td", salesOrders[i].status);
