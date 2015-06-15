@@ -63,6 +63,26 @@ var salesOrders = [
     	          }
     	  ]
       },
+      {
+    	  ID: "1530",
+    	  customer: "102",
+    	  date: "2015-06-13",
+    	  status: "New",
+    	  items: [
+    	          {
+    	        	  itemID: "10",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 23,
+    	        	  unit: "EA"
+    	          },
+    	          {
+    	        	  itemID: "20",
+    	        	  product: "MCF-0001",
+    	        	  quantity: 45,
+    	        	  unit: "EA"
+    	          }
+    	  ]
+      },
 ];
 
 
