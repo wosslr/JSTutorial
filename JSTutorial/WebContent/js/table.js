@@ -85,6 +85,12 @@ var salesOrders = [
       },
 ];
 
+var gSOStatus = {
+	NEW: "New",	
+	IN_PROCESS: "In Process",
+	RELEASED: "Released",
+	CANCELLED: "Cancelled",
+};
 
 var gSelectedRow;
 
@@ -93,10 +99,10 @@ function createTable(message){
 	var hRow = document.createElement("tr");
 	hRow.style.width = "200%";
 	
-	appendCell(hRow, "th", "Order ID");
-	appendCell(hRow, "th", "Customer");
-	appendCell(hRow, "th", "Status");
-	appendCell(hRow, "th", "Date");
+	appendCell(hRow, "owlCell", "th", "Order ID");
+	appendCell(hRow, "owlCell", "th", "Customer");
+	appendCell(hRow, "owlCell", "th", "Status");
+	appendCell(hRow, "owlCell", "th", "Date");
 	document.getElementById("newtitle").appendChild(hRow);
 	
 	for(var i=0; i<salesOrders.length;i++){
@@ -115,21 +121,89 @@ function createTable(message){
 				gSelectedRow = this;
 				gSelectedRow.className = "selectedRow";
 			}
+			resetActButtonStatus();
 		};
 		
-		appendCell(row, "td", salesOrders[i].ID);
-		appendCell(row, "td", salesOrders[i].customer);
-		appendCell(row, "td", salesOrders[i].status);
+		appendCell(row, "owlCell", "td", salesOrders[i].ID);
+		appendCell(row, "owlCell", "td", salesOrders[i].customer);
+		appendCell(row, "owlCell", "td", salesOrders[i].status);
 		
 		var date = new Date(salesOrders[i].date);
-		appendCell(row, "td", date.toDateString());
+		appendCell(row, "owlCell", "td", date.toDateString());
 		document.getElementById("newbody").appendChild(row); //
 	}
 	
+	resetActButtonStatus();
 }
 
-function appendCell(oRow, cellTag, text) {
+function appendCell(oRow, className, cellTag, text) {
 	var oCell = document.createElement(cellTag);
+	oCell.className = className;
 	oCell.appendChild(document.createTextNode(text));
 	oRow.appendChild(oCell);
+}
+
+function showNewSOpup(w,h){   
+    var popUnder = document.getElementById("newSOPopUnder");
+    popUnder.style.top = "0px";
+    popUnder.style.left = "0px";
+    popUnder.style.width = "100%";
+    popUnder.style.height = "100%";
+    popUnder.style.visibility = "visible";
+    popUnder.style.display = "block";
+    
+    var popup = document.getElementById("newSOPop");
+    popup.style.visibility = "visible";
+    popup.style.left = "40%";
+    popup.style.top = "30%";    
+    //document.body.style.margin = 0;
+}
+
+function hidepopup(){   
+    var popup = document.getElementById("newSOPopUnder");   
+    popup.style.visibility = "hidden";
+}
+
+function deleteRow(){
+	if(gSelectedRow != null){
+		document.getElementById("newbody").deleteRow(gSelectedRow.rowIndex - 1);
+		gSelectedRow = null;
+	}
+	resetActButtonStatus();
+}
+
+function setActButtonEnable( sProcess, sRelease, sCancel ) {
+	document.getElementById("btnProcess").enable = sProcess;
+	document.getElementById("btnProcess").disabled = !sProcess;
+	document.getElementById("btnRelease").enable = sRelease;
+	document.getElementById("btnRelease").disabled = !sRelease;
+	document.getElementById("btnCancel").enable = sCancel;
+	document.getElementById("btnCancel").disabled = !sCancel;
+}
+
+function resetActButtonStatus() {
+	if (gSelectedRow == null) {
+		setActButtonEnable(false, false, false);
+	}else if (gSelectedRow.childNodes[2].innerText == gSOStatus.NEW) {
+		setActButtonEnable(true, false, true);
+	}else if (gSelectedRow.childNodes[2].innerText == gSOStatus.IN_PROCESS) {
+		setActButtonEnable(false, true, true);
+	}else{
+		setActButtonEnable(false, false, false);
+	}
+}
+
+function setSOtoInProcess() {
+	gSelectedRow.childNodes[2].innerText = gSOStatus.IN_PROCESS;
+	resetActButtonStatus();
+}
+
+function setSOtoReleased() {
+	gSelectedRow.childNodes[2].innerText = gSOStatus.RELEASED;
+	resetActButtonStatus();
+}
+
+function setSOtoCancelled() {
+	gSelectedRow.childNodes[2].innerText = gSOStatus.CANCELLED;
+	resetActButtonStatus();
 }
