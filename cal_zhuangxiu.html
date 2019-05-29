@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1">
+	<title>装修贷款计算器
+	</title>
+	<style>
+	</style>
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+		integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+		crossorigin="anonymous">
+	<link rel="stylesheet"
+		href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+		integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+		crossorigin="anonymous">
+	<link rel="stylesheet"
+		href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+	<script>
+		$(() => {
+
+		});
+		function calculate(event) {
+			const CURRENCY_FORMAT = "0,0.00";
+			let iLoanAmount = parseInt($("#loan_amount").val() || 0);
+			let iLoanYears = parseInt($("#loan_years").val() || 0);
+			let iMonthlyEarn = parseInt($("#monthly_earn").val() || 0);
+			let fFeeRate = parseFloat($("#fee_rate").val() || 0);
+			let fGainRate = parseFloat($("#gain_rate").val() || 0);
+			let fMonthlyPayAmount = (iLoanAmount / (iLoanYears * 12)) + (iLoanAmount * (fFeeRate / 1000));
+			let fYearlyPayAmount = (fMonthlyPayAmount - iMonthlyEarn) * 12;
+			fYearlyPayAmount = fYearlyPayAmount > 0 ? fYearlyPayAmount : 0;
+			let fYearlyInvestmentAmount = iLoanAmount - fYearlyPayAmount;
+			let aResults = [];
+			for (let i = 1; i <= iLoanYears; i++) {
+				let fYearlyGains = (fYearlyInvestmentAmount - fYearlyPayAmount) * (fGainRate / 100);
+				aResults.push({
+					year: `第${i}年`,
+					yearlyInvestmentAmount: numeral(fYearlyInvestmentAmount).format(CURRENCY_FORMAT),
+					yearlyGains: numeral(fYearlyGains).format(CURRENCY_FORMAT),
+					yearEndGainAmount: numeral(fYearlyInvestmentAmount + fYearlyGains).format(CURRENCY_FORMAT)
+				});
+				fYearlyInvestmentAmount = fYearlyInvestmentAmount - fYearlyPayAmount + fYearlyGains;
+			}
+			$('#result_table').bootstrapTable('destroy').bootstrapTable({
+				columns: [{
+					field: 'year',
+					title: '年份'
+				}, {
+					field: 'yearlyInvestmentAmount',
+					title: '年投资金额'
+				}, {
+					field: 'yearlyGains',
+					title: '预计年收益'
+				}, {
+					field: 'yearEndGainAmount',
+					title: '预计年度所得总金额'
+				}],
+				data: aResults
+			});
+
+			// $('#result_table').bootstrapTable({
+			// 	columns: [{
+			// 		field: 'id',
+			// 		title: 'Item ID'
+			// 	}, {
+			// 		field: 'name',
+			// 		title: 'Item Name'
+			// 	}, {
+			// 		field: 'price',
+			// 		title: 'Item Price'
+			// 	}],
+			// 	data: [{
+			// 		id: 1,
+			// 		name: 'Item 1',
+			// 		price: '$1'
+			// 	}, {
+			// 		id: 2,
+			// 		name: 'Item 2',
+			// 		price: '$2'
+			// 	}]
+			// });
+		}
+	</script>
+</head>
+
+<body>
+	<div>
+		<div>
+			<span>贷款金额： </span>
+			<input id="loan_amount"
+				type="number" />
+		</div>
+		<div>
+			<span>贷款年限： </span>
+			<input id="loan_years"
+				type="number" />
+		</div>
+		<div>
+			<span>月净收入： </span>
+			<input id="monthly_earn"
+				value="8000"
+				type="number" />
+		</div>
+		<div>
+			<span>月手续费率： </span>
+			<input id="fee_rate"
+				value="3.5"
+				type="number" />
+		</div>
+		<div>
+			<span>投资年华收益率： </span>
+			<input id="gain_rate"
+				value="8.5"
+				type="number" />
+		</div>
+		<div>
+			<button id="calculate"
+				onclick="calculate()"
+				type="button">计算</button>
+		</div>
+		<div id="result">
+			<table id="result_table"></table>
+		</div>
+	</div>
+</body>
+
+</html>
