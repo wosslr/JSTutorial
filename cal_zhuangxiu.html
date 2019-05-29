@@ -35,58 +35,44 @@
 			let fFeeRate = parseFloat($("#fee_rate").val() || 0);
 			let fGainRate = parseFloat($("#gain_rate").val() || 0);
 			let fMonthlyPayAmount = (iLoanAmount / (iLoanYears * 12)) + (iLoanAmount * (fFeeRate / 1000));
-			let fYearlyPayAmount = (fMonthlyPayAmount - iMonthlyEarn) * 12;
-			fYearlyPayAmount = fYearlyPayAmount > 0 ? fYearlyPayAmount : 0;
-			let fYearlyInvestmentAmount = iLoanAmount - fYearlyPayAmount;
+			let fYearlyFlexPayAmount = (fMonthlyPayAmount - iMonthlyEarn) * 12;
+			fYearlyFlexPayAmount = fYearlyFlexPayAmount > 0 ? fYearlyFlexPayAmount : 0;
+			let fYearlyInvestmentAmount = iLoanAmount - fYearlyFlexPayAmount;
 			let aResults = [];
 			for (let i = 1; i <= iLoanYears; i++) {
-				let fYearlyGains = (fYearlyInvestmentAmount - fYearlyPayAmount) * (fGainRate / 100);
+				let fYearlyGains = (fYearlyInvestmentAmount - fYearlyFlexPayAmount) * (fGainRate / 100);
 				aResults.push({
 					year: `第${i}年`,
+					yearlyFlexPayAmount: numeral(fYearlyFlexPayAmount).format(CURRENCY_FORMAT),
 					yearlyInvestmentAmount: numeral(fYearlyInvestmentAmount).format(CURRENCY_FORMAT),
 					yearlyGains: numeral(fYearlyGains).format(CURRENCY_FORMAT),
 					yearEndGainAmount: numeral(fYearlyInvestmentAmount + fYearlyGains).format(CURRENCY_FORMAT)
 				});
-				fYearlyInvestmentAmount = fYearlyInvestmentAmount - fYearlyPayAmount + fYearlyGains;
+				fYearlyInvestmentAmount = fYearlyInvestmentAmount - fYearlyFlexPayAmount + fYearlyGains;
 			}
 			$('#result_table').bootstrapTable('destroy').bootstrapTable({
 				columns: [{
 					field: 'year',
 					title: '年份'
 				}, {
+					field: 'yearlyFlexPayAmount',
+					title: '每年划归活期以偿还贷款金额',
+					align: "right"
+				}, {
 					field: 'yearlyInvestmentAmount',
-					title: '年投资金额'
+					title: '年投资金额',
+					align: "right"
 				}, {
 					field: 'yearlyGains',
-					title: '预计年收益'
+					title: '预计年收益',
+					align: "right"
 				}, {
 					field: 'yearEndGainAmount',
-					title: '预计年度所得总金额'
+					title: '预计年度所得总金额',
+					align: "right"
 				}],
 				data: aResults
 			});
-
-			// $('#result_table').bootstrapTable({
-			// 	columns: [{
-			// 		field: 'id',
-			// 		title: 'Item ID'
-			// 	}, {
-			// 		field: 'name',
-			// 		title: 'Item Name'
-			// 	}, {
-			// 		field: 'price',
-			// 		title: 'Item Price'
-			// 	}],
-			// 	data: [{
-			// 		id: 1,
-			// 		name: 'Item 1',
-			// 		price: '$1'
-			// 	}, {
-			// 		id: 2,
-			// 		name: 'Item 2',
-			// 		price: '$2'
-			// 	}]
-			// });
 		}
 	</script>
 </head>
